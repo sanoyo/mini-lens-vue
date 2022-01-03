@@ -13,7 +13,7 @@
                       <v-list-item-title class="headline mb-1 white--text">
                         Deployment
                       </v-list-item-title>
-                      <v-list-item-subtitle class="headline white--text">2</v-list-item-subtitle>
+                      <!-- <v-list-item-subtitle class="headline white--text">2</v-list-item-subtitle> -->
                     </v-list-item-content>
                   </v-list-item>
                 </v-col>
@@ -89,7 +89,7 @@
               </v-toolbar-title>
               <v-spacer></v-spacer>
               <v-toolbar-title class="subtitle-1 black--text ml-2">
-                Status Running
+                {{ status }}
               </v-toolbar-title>
               <v-icon color="green" class="ml-2">fas fa-long-arrow-alt-up</v-icon>
             </v-app-bar>
@@ -114,6 +114,9 @@
 </template>
 
 <script>
+import {mapState, mapActions} from 'vuex'
+
+import {actionTypes as podActionTypes} from '@/store/modules/pod'
 
 export default {
   name: 'Home',
@@ -129,7 +132,20 @@ export default {
       type: 'trend',
       autoLineWidth: false,
       fills: false,
-  })
+  }),
+  computed: {
+    ...mapState({
+      status: state => state.pod.data,
+      error: state => state.pod.error,
+      isLoading: state => state.pod.isLoading,
+    }),
+  },
+  methods: {
+    ...mapActions (['getPod'])
+  },
+  mounted() {
+    this.$store.dispatch(podActionTypes.getPod)
+  },
 }
 </script>
 <style lang="sass" scoped>
